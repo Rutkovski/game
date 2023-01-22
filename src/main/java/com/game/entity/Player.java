@@ -1,7 +1,11 @@
 package com.game.entity;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "player")
@@ -11,20 +15,23 @@ public class Player {
     @Column(name = "id", nullable = false)
     private Long id;
 
-    @Column(name = "name", length = 12)
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "title", length = 30)
+    @Column(name = "title")
     private String title;
 
-    @Column(name = "race", length = 20)
-    private String race;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "race")
+    private Race race;
 
-    @Column(name = "profession", length = 20)
-    private String profession;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "profession")
+    private Profession profession;
 
     @Column(name = "birthday")
-    private LocalDate birthday;
+    private Date birthday;
 
     @Column(name = "banned")
     private Boolean banned;
@@ -62,27 +69,27 @@ public class Player {
         this.title = title;
     }
 
-    public String getRace() {
+    public Race getRace() {
         return race;
     }
 
-    public void setRace(String race) {
+    public void setRace(Race race) {
         this.race = race;
     }
 
-    public String getProfession() {
+    public Profession getProfession() {
         return profession;
     }
 
-    public void setProfession(String profession) {
+    public void setProfession(Profession profession) {
         this.profession = profession;
     }
 
-    public LocalDate getBirthday() {
+    public Date getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(LocalDate birthday) {
+    public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
 

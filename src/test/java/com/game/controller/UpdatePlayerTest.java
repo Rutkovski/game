@@ -35,7 +35,7 @@ public class UpdatePlayerTest extends AbstractTest {
         mockMvc.perform(post("/rest/players/415")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(TestsHelper.NORMAL_JSON))
-                .andExpect(status().isNotFound());
+                 .andExpect(status().isNotFound());
     }
 
     //test3
