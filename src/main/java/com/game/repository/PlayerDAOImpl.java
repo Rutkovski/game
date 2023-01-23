@@ -30,13 +30,13 @@ public class PlayerDAOImpl implements PlayerDAO {
 
     @Override
     public void savePlayer(Player player) {
-            entityManager.persist(player);
+        entityManager.persist(player);
     }
 
     //Работает
     @Override
     public Player getPlayer(long id) {
-        Player player = entityManager.find(Player.class,id);
+        Player player = entityManager.find(Player.class, id);
         return player;
 
     }
@@ -44,19 +44,13 @@ public class PlayerDAOImpl implements PlayerDAO {
     //Работает
     @Override
     public void deletePlayer(long id) {
-        Player player = entityManager.find(Player.class,id);
+        Player player = entityManager.find(Player.class, id);
         entityManager.remove(player);
     }
 
     @Override
     public Player update(Player player) {
-        System.out.println("in Dao1");
-        try {
-            return entityManager.merge(player);
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return null;
+        return entityManager.merge(player);
     }
 
     public EntityManager getEntityManager() {

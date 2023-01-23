@@ -1,9 +1,11 @@
 package com.game.controller;
 
 import com.game.entity.Player;
+import com.game.exeption_handing.BadException;
 import com.game.exeption_handing.NoSuchPlayerException;
 import com.game.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +21,9 @@ public class MyController {
 
     @PostMapping("/players")
     public Player addNewPlayer(@RequestBody Player player){
+        if (player==null){
+            throw new BadException();
+        }
         validationAddAndUpgrade(player);
         int level = (int) (Math.sqrt(2500+200*player.getExperience()-50)/100);
         int untilNextLevel = 50*(level+1)*(level+2)-player.getExperience();
@@ -29,53 +34,71 @@ public class MyController {
     }
 
     @PostMapping("/players/{id}")
-    public Player updatePlayer(@PathVariable long id, @RequestBody Player player){
+    public Player updatePlayer(@PathVariable long id,@Validated @RequestBody Player player) {
 
-        Player old = playerService.getPlayer(id);
-        if (old==null & id!=0){
-            throw new NoSuchPlayerException();
-        }
-        if (player.getName()!=null){
-            old.setName(player.getName());
-        }
-        if (player.getTitle()!=null){
-            old.setTitle(player.getTitle());
-        }
-        if (player.getRace()!=null){
-            old.setRace(player.getRace());
-        }
-        if (player.getProfession()!=null){
-            old.setProfession(player.getProfession());
-        }
-        if (player.getBirthday()!=null){
-            old.setBirthday(player.getBirthday());
-        }
-        if (player.getBanned()!=false){
-            old.setBanned(player.getBanned());
-        }
-        if (player.getExperience()!=0){
-            old.setExperience(player.getExperience());
-        }
-        int level = (int) (Math.sqrt(2500+200*old.getExperience()-50)/100);
-        int untilNextLevel = 50*(level+1)*(level+2)-old.getExperience();
-        old.setLevel(level);
-        old.setUntilNextLevel(untilNextLevel);
-        validationAddAndUpgrade(old);
-
-
-        return playerService.updatePlayer(old);
+        return playerService.newUpdatePlayer(id,player);
     }
-
+//        if (id<=0){
+//            throw new BadException();
+//        }
+//
+//
+//        Player old = playerService.getPlayer(id);
+//        if (old==null & id!=0){
+//            throw new NoSuchPlayerException();
+//        }
+//        boolean izm = false;
+//        if (player.getName()!=null){
+//            old.setName(player.getName());
+//            izm = true;
+//        }
+//        if (player.getTitle()!=null){
+//            old.setTitle(player.getTitle());
+//            izm = true;
+//
+//        }
+//        if (player.getRace()!=null){
+//            old.setRace(player.getRace());
+//            izm = true;
+//        }
+//        if (player.getProfession()!=null){
+//            old.setProfession(player.getProfession());
+//            izm = true;
+//        }
+//        if (player.getBirthday()!=null){
+//            old.setBirthday(player.getBirthday());
+//            izm = true;
+//        }
+//        if (player.getBanned()!=null && player.getBanned()){
+//            old.setBanned(player.getBanned());
+//            izm = true;
+//        }
+//        if (player.getExperience()!=null){
+//            old.setExperience(player.getExperience());
+//            izm = true;
+//        }
+//        if (izm) {
+//            int level = (int) (Math.sqrt(2500+200*old.getExperience()-50)/100);
+//            int untilNextLevel = 50*(level+1)*(level+2)-old.getExperience();
+//            old.setLevel(level);
+//            old.setUntilNextLevel(untilNextLevel);
+//            validationAddAndUpgrade(old);
+//            return playerService.updatePlayer(old);
+//        } else {
+//            return old;
+//        }
+//    }
+//
     private void validationAddAndUpgrade(Player player) {
-        boolean validName = !player.getName().isEmpty()&&player.getName().length()<=12;
+        boolean validName = player.getName()!=null&&player.getName().length()<=12;
         boolean validTitle =player.getTitle()!=null&&player.getTitle().length()<=30;
         boolean validRace = player.getRace()!=null;
         boolean validProfession = player.getProfession()!=null;
-        boolean ValidBirthday = player.getBirthday().getTime()>=0;
+        boolean ValidBirthday = player.getBirthday()!=null && player.getBirthday().getTime()>=0;
         boolean validExperience = player.getExperience()!=null&&player.getExperience()>=0&&player.getExperience()<=10000000;
         boolean validAllParameters = validName&&validTitle&&validRace&&validProfession&&ValidBirthday&&validExperience;
         if(!validAllParameters){
-            throw new RuntimeException();
+            throw new BadException();
         }
     }
 
@@ -88,7 +111,7 @@ public class MyController {
         if (player==null & id!=0){
             throw new NoSuchPlayerException();
         } if (id ==0){
-            throw new RuntimeException();
+            throw new BadException();
         }
         return player;
     }
@@ -96,7 +119,10 @@ public class MyController {
     @DeleteMapping("/players/{id}")
     public void deletePlayer(@PathVariable int id){
         Player player = playerService.getPlayer(id);
-        if (player==null & id!=0){
+        if (id == 0){
+            throw new BadException();
+        }
+        if (player==null){
             throw new NoSuchPlayerException();
         }
         playerService.deletePlayer(id);

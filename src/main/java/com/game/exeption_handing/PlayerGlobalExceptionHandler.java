@@ -14,7 +14,7 @@ public class PlayerGlobalExceptionHandler {
     }
 
     @ExceptionHandler
-    public ResponseEntity<?> handleException(Exception exception){
+    public ResponseEntity<?> handleException(BadException exception){
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

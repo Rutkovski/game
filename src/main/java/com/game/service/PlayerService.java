@@ -10,7 +10,7 @@ import java.util.Map;
 public interface PlayerService {
     public List<Player> getPlayers(Map<String, String> allQueryParams);
 
-    @Transactional
+
     Integer  getCountPlayers(Map<String, String> allQueryParams);
 
     public void savePlayer(Player player);
@@ -18,6 +18,8 @@ public interface PlayerService {
     public void deletePlayer(long id);
     public Player updatePlayer(Player player);
 
+    Player newUpdatePlayer(Long id, Player player);
 
 
+    Player findPlayerByID(Long id);
 }
