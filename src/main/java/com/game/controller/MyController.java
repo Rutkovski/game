@@ -1,14 +1,13 @@
 package com.game.controller;
 
 import com.game.entity.Player;
-import com.game.entity.Profession;
-import com.game.entity.Race;
 import com.game.exeption_handing.NoSuchPlayerException;
 import com.game.service.PlayerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/rest")
@@ -25,7 +24,6 @@ public class MyController {
         int untilNextLevel = 50*(level+1)*(level+2)-player.getExperience();
         player.setLevel(level);
         player.setUntilNextLevel(untilNextLevel);
-
         playerService.savePlayer(player);
         return player;
     }
@@ -34,7 +32,6 @@ public class MyController {
     public Player updatePlayer(@PathVariable long id, @RequestBody Player player){
 
         Player old = playerService.getPlayer(id);
-
         if (old==null & id!=0){
             throw new NoSuchPlayerException();
         }
@@ -63,7 +60,6 @@ public class MyController {
         int untilNextLevel = 50*(level+1)*(level+2)-old.getExperience();
         old.setLevel(level);
         old.setUntilNextLevel(untilNextLevel);
-
         validationAddAndUpgrade(old);
 
 
@@ -83,11 +79,7 @@ public class MyController {
         }
     }
 
-    @GetMapping("/players")
-    public List<Player> showAllPlayers(){
-        List<Player> allPlayers = playerService.getAllPlayers();
-        return allPlayers;
-    }
+
 
     //проходит все тесты, готов
     @GetMapping("/players/{id}")
@@ -100,7 +92,6 @@ public class MyController {
         }
         return player;
     }
-
     // Проходит все тесты, готов
     @DeleteMapping("/players/{id}")
     public void deletePlayer(@PathVariable int id){
@@ -108,10 +99,19 @@ public class MyController {
         if (player==null & id!=0){
             throw new NoSuchPlayerException();
         }
-
         playerService.deletePlayer(id);
 
+    }
+    //Проходит все тесты готов
+    @GetMapping("/players/count")
+    public Integer getCount(@RequestParam Map<String, String> allQueryParams){
 
+        return playerService.getCountPlayers(allQueryParams);
+    }
+    //Проходит все тесты готов
+    @GetMapping("/players")
+    public  List<Player> showPlayers(@RequestParam Map<String, String> allQueryParams){
+        return playerService.getPlayers(allQueryParams);
     }
 
 

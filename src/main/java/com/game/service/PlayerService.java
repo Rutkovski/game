@@ -3,10 +3,16 @@ package com.game.service;
 import com.game.entity.Player;
 
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Map;
 
 public interface PlayerService {
-    public List<Player> getAllPlayers();
+    public List<Player> getPlayers(Map<String, String> allQueryParams);
+
+    @Transactional
+    Integer  getCountPlayers(Map<String, String> allQueryParams);
+
     public void savePlayer(Player player);
     public Player getPlayer(long id);
     public void deletePlayer(long id);

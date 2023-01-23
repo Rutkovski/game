@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class PlayerServiceImpl implements PlayerService {
@@ -16,8 +17,18 @@ public class PlayerServiceImpl implements PlayerService {
 
     @Override
     @Transactional
-    public List<Player> getAllPlayers() {
-        return playerDAO.getAllPlayers();
+    public List<Player> getPlayers(Map<String, String> allQueryParams) {
+        FilterHelper filterHelper = new FilterHelper(playerDAO.getAllPlayers(),allQueryParams);
+
+        return filterHelper.getPage(filterHelper.allFilterAndOrder());
+    }
+
+    @Override
+    @Transactional
+    public Integer  getCountPlayers(Map<String, String> allQueryParams) {
+        FilterHelper filterHelper = new FilterHelper(playerDAO.getAllPlayers(),allQueryParams);
+
+        return filterHelper.allFilterAndOrder().size();
     }
 
     @Override

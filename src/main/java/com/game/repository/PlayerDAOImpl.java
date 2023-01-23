@@ -2,19 +2,15 @@ package com.game.repository;
 
 import com.game.entity.Player;
 
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
-import javax.persistence.Transient;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Stream;
 
 @Repository
 public class PlayerDAOImpl implements PlayerDAO {
